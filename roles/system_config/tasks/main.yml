@@ -9,12 +9,16 @@
     enabled: no
     state: stopped
 
-- name: Allow nonlocal bind
+- name: Ensure sysctl settings are present
   sysctl:
-    name: net.ipv4.ip_nonlocal_bind
-    value: '1'
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    sysctl_file: /etc/sysctl.conf
     state: present
     reload: yes
+  loop:
+    - { name: 'net.ipv4.ip_nonlocal_bind', value: '1' }
+    - { name: 'net.ipv4.ip_forward', value: '1' }
 
 - name: Set SELinux to permissive mode
   command: setenforce 0

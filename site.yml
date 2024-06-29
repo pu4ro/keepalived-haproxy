@@ -3,6 +3,6 @@
   roles:
     #- install_apache2
     #- configure_repo
-    #- system_config
-    - keepalived
-    - haproxy
+    - system_config
+    #- keepalived
+    #- haproxy
