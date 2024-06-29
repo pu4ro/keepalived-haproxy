@@ -1,0 +1,22 @@
+- name: Install keepalived
+  dnf:
+    name: keepalived
+    state: latest
+
+- name: Configure keepalived for MASTER
+  template:
+    src: keepalived_master.conf.j2
+    dest: /etc/keepalived/keepalived.conf
+  when: inventory_hostname in groups['masters']
+
+- name: Configure keepalived for BACKUP
+  template:
+    src: keepalived_backup.conf.j2
+    dest: /etc/keepalived/keepalived.conf
+  when: inventory_hostname in groups['backups']
+
+- name: Ensure keepalived is enabled and running
+  systemd:
+    name: keepalived
+    enabled: yes
+    state: restarted

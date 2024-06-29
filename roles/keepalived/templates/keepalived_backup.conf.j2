@@ -1,0 +1,30 @@
+vrrp_script chk_haproxy {
+    script "pidof haproxy"            # HAProxy 프로세스 확인
+    interval 2                        # 체크 간격 (초)
+    weight 2
+}
+
+vrrp_instance VI_1 {
+    interface {{ interface_name }}    # 네트워크 인터페이스 이름
+    state BACKUP                      # 이 서버를 BACKUP으로 설정
+    virtual_router_id {{ vrrp_id }}   # VRRP 그룹 ID (모든 노드에서 동일)
+    priority 100                      # 우선순위 (MASTER보다 낮게 설정)
+    advert_int 1                      # 광고 간격 (초)
+
+    authentication {
+        auth_type PASS
+        auth_pass {{ auth_pass }}     # 인증 암호
+    }
+
+    virtual_ipaddress {
+        {{ virtual_ip }}              # 가상 IP 주소
+    }
+
+    track_script {
+        chk_haproxy                   # HAProxy 상태 체크 스크립트
+    }
+
+    notify_master "{{ notify_script }} master"
+    notify_backup "{{ notify_script }} backup"
+    notify_fault "{{ notify_script }} fault"
+}

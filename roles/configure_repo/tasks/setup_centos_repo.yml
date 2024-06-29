@@ -1,0 +1,26 @@
+---
+
+- name: Find all .repo files in /etc/yum.repos.d
+  find:
+    paths: /etc/yum.repos.d
+    patterns: "*.repo"
+  register: repo_files
+  
+- name: Remove all .repo files
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  loop: "{{ repo_files.files }}"
+  when: repo_files.matched > 0
+
+- name: Configure CentOS local repo
+  copy:
+    content: |
+      [centos-local]
+      name=CentOS Local Repository
+      baseurl={{ repo_url.centos }}
+      enabled=1
+      gpgcheck=0
+    dest: /etc/yum.repos.d/centos-local.repo
+
+

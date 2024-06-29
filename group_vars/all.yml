@@ -1,0 +1,58 @@
+# 마스터 서버 공통 네트워크 인터페이스 이름
+master_interface_name: ens18
+
+# 마스터 서버 VRRP 그룹 ID
+master_vrrp_id: 51
+
+# 마스터 서버 인증 암호
+master_auth_pass: cloud1234
+
+# 마스터 서버 가상 IP 주소
+master_virtual_ip: 192.168.135.80
+
+# 마스터 서버 Notify 스크립트 경로
+master_notify_script: "/etc/keepalived/notify.sh"
+
+# 마스터 서버 광고 간격
+master_advert_int: 1
+
+# 마스터 서버 HAProxy 체크 스크립트 간격
+master_chk_interval: 2
+
+# 마스터 서버 HAProxy 체크 스크립트 가중치
+master_chk_weight: 2
+------------------------------------------------------------------------------------------------------------
+# 백업 서버 네트워크 인터페이스 이름
+backup_interface_name: ens18
+
+# 백업 서버 VRRP 그룹 ID
+backup_vrrp_id: 51
+
+# 백업 서버 인증 암호
+backup_auth_pass: cloud1234
+
+# 백업 서버 가상 IP 주소
+backup_virtual_ip: 192.168.135.80
+
+# 백업 서버 Notify 스크립트 경로
+backup_notify_script: "/etc/keepalived/notify.sh"
+
+# 백업 서버 광고 간격
+backup_advert_int: 1
+
+# 백업 서버 HAProxy 체크 스크립트 간격
+backup_chk_interval: 2
+
+# 백업 서버 HAProxy 체크 스크립트 가중치
+backup_chk_weight: 2
+------------------------------------------------------------------------------------------------------------
+frontend_ip: 192.168.135.80
+frontend_port: 8080
+
+backend_servers:
+  - name: server1
+    address: 192.168.135.81
+    port: 80
+  - name: server2
+    address: 192.168.135.82
+    port: 80
