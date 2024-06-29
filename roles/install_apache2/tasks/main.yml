@@ -1,5 +1,4 @@
 ---
-
 - name: Ensure Apache2 is installed on Ubuntu
   apt:
     name: apache2
