@@ -10,7 +10,9 @@
   yum:
     name: httpd
     state: present
-  when: ansible_os_family == "RedHat"
+  when:
+    - ansible_os_family == "RedHat"
+    - inventory_hostname == "master1"
 
 - name: Change Apache2 port to 8080 on Ubuntu
   lineinfile:
@@ -28,7 +30,9 @@
     line: 'Listen 8080'
     state: present
   notify: Restart Apache2
-  when: ansible_os_family == "RedHat"
+  when:
+    - ansible_os_family == "RedHat"
+    - inventory_hostname == "master1"
 
 - name: Update default virtual host to listen on port 8080 on Ubuntu
   lineinfile:
@@ -47,6 +51,7 @@
     group: root
     mode: '0655'
     remote_src: yes
+  when: inventory_hostname == "master1"
 
 - name: Ensure Apache2 is started and enabled
   systemd:
@@ -60,4 +65,6 @@
     name: httpd
     state: started
     enabled: yes
-  when: ansible_os_family == "RedHat"
+  when:
+    - ansible_os_family == "RedHat"
+    - inventory_hostname == "master1"

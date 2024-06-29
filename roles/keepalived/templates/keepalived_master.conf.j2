@@ -1,15 +1,15 @@
 vrrp_script chk_haproxy {
     script "pidof haproxy"          # HAProxy 프로세스 확인
-    interval {{ master_chk_interval }}     # 체크 간격 (초)
-    weight {{ master_chk_weight }}
+    interval 2     # 체크 간격 (초)
+    weight 2
 }
 
 vrrp_instance VI_1 {
     interface {{ master_interface_name }}  # 네트워크 인터페이스 이름
-    state {{ state }}                      # 서버 상태 설정 (MASTER 또는 BACKUP)
+    state MASTER                      # 서버 상태 설정 (MASTER 또는 BACKUP)
     virtual_router_id {{ master_vrrp_id }} # VRRP 그룹 ID
-    priority {{ priority }}                # 우선순위 설정
-    advert_int {{ master_advert_int }}     # 광고 간격 (초)
+    priority 100               # 우선순위 설정
+    advert_int 1    # 광고 간격 (초)
 
     authentication {
         auth_type PASS
