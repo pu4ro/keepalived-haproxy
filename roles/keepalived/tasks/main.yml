@@ -3,6 +3,14 @@
     name: keepalived
     state: latest
 
+- name: Create notify.sh script
+  template:
+    src: templates/notify.sh.j2  # 템플릿 파일의 경로
+    dest: /etc/keepalived/notify.sh  # 목적지 경로
+    owner: root
+    group: root
+    mode: '0755'  # 실행 가능한 권한으로 설정
+
 - name: Configure keepalived for MASTER
   template:
     src: keepalived_master.conf.j2
