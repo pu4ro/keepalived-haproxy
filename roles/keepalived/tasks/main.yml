@@ -13,6 +13,16 @@
     path: /etc/keepalived/notify.sh
     mode: '0755'
 
+- name: Create wireguard script
+  template:
+    src: wireguard.sh.j2  # 템플릿 파일의 경로
+    dest: /etc/keepalived/check_wireguard.sh.sh  # 목적지 경로
+
+- name: Set execute permission on wireguard.sh
+  file:
+    path: /etc/keepalived/check_wireguard.sh.sh
+    mode: '0755'
+
 - name: Configure keepalived for MASTER
   template:
     src: keepalived_master.conf.j2

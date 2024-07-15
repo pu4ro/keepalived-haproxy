@@ -1,0 +1,32 @@
+#!/bin/bash
+
+IFACE="wg0"
+WG_CONFIG="/etc/wireguard/wg0.conf"
+
+# Check if WireGuard interface is up
+ip link show $IFACE > /dev/null 2>&1
+IFACE_STATUS=$?
+
+# Determine the state of keepalived
+KEEPALIVED_STATE=$(cat /var/run/keepalived.state)
+
+# If the interface is down and this is the master, start WireGuard
+if [ $IFACE_STATUS -ne 0 ] && [ "$KEEPALIVED_STATE" == "MASTER" ]; then
+    echo "Starting WireGuard on MASTER"
+    wg-quick up $WG_CONFIG
+    exit 0
+fi
+
+# If the interface is up and this is the backup, stop WireGuard
+if [ $IFACE_STATUS -eq 0 ] && [ "$KEEPALIVED_STATE" == "BACKUP" ]; then
+    echo "Stopping WireGuard on BACKUP"
+    wg-quick down $WG_CONFIG
+    exit 1
+fi
+
+# If everything is fine, exit with success
+if [ $IFACE_STATUS -eq 0 ]; then
+    exit 0
+else
+    exit 1
+fi

@@ -4,11 +4,17 @@ vrrp_script chk_haproxy {
     weight 2
 }
 
+vrrp_script chk_wireguard {
+    script "/etc/keepalived/check_wireguard.sh"   # WireGuard 상태 체크 스크립트
+    interval 2                                    # 체크 간격 (초)
+    weight 2
+}
+
 vrrp_instance VI_1 {
     interface {{ backup_interface_name }}    # 네트워크 인터페이스 이름
-    state BACKUP                             # 이 서버를 BACKUP으로 설정
+    state MASTER                             # 이 서버를 MASTER으로 설정
     virtual_router_id {{ backup_vrrp_id }}   # VRRP 그룹 ID (모든 노드에서 동일)
-    priority 100                             # 우선순위 (MASTER보다 낮게 설정)
+    priority 100                             # 우선순위
     advert_int 1                             # 광고 간격 (초)
 
     authentication {
@@ -22,6 +28,7 @@ vrrp_instance VI_1 {
 
     track_script {
         chk_haproxy                         # HAProxy 상태 체크 스크립트
+        chk_wireguard                       # WireGuard 상태 체크 스크립트
     }
 
     notify_master "{{ backup_notify_script }} master"
