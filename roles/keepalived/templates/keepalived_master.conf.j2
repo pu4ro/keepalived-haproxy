@@ -1,27 +1,34 @@
 vrrp_script chk_haproxy {
-    script "pidof haproxy"          # HAProxy 프로세스 확인
-    interval 2     # 체크 간격 (초)
+    script "pidof haproxy"              # HAProxy 프로세스 확인
+    interval 2                          # 체크 간격 (초)
+    weight 2
+}
+
+vrrp_script chk_wireguard {
+    script "/etc/keepalived/check_wireguard.sh"   # WireGuard 상태 체크 스크립트
+    interval 2                                    # 체크 간격 (초)
     weight 2
 }
 
 vrrp_instance VI_1 {
-    interface {{ master_interface_name }}  # 네트워크 인터페이스 이름
-    state MASTER                      # 서버 상태 설정 (MASTER 또는 BACKUP)
-    virtual_router_id {{ master_vrrp_id }} # VRRP 그룹 ID
-    priority 100               # 우선순위 설정
-    advert_int 1    # 광고 간격 (초)
+    interface {{ master_interface_name }}    # 네트워크 인터페이스 이름
+    state MASTER                             # 이 서버를 MASTER으로 설정
+    virtual_router_id {{ master_vrrp_id }}   # VRRP 그룹 ID (모든 노드에서 동일)
+    priority 100                             # 우선순위
+    advert_int 1                             # 광고 간격 (초)
 
     authentication {
         auth_type PASS
-        auth_pass {{ master_auth_pass }}   # 인증 암호
+        auth_pass {{ master_auth_pass }}     # 인증 암호
     }
 
     virtual_ipaddress {
-        {{ master_virtual_ip }}            # 가상 IP 주소
+        {{ master_virtual_ip }}              # 가상 IP 주소
     }
 
     track_script {
-        chk_haproxy                        # HAProxy 상태 체크 스크립트
+        chk_haproxy                         # HAProxy 상태 체크 스크립트
+        chk_wireguard                       # WireGuard 상태 체크 스크립트
     }
 
     notify_master "{{ master_notify_script }} master"

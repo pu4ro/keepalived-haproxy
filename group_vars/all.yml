@@ -6,7 +6,7 @@ repo_url:
   centos: "http://192.168.135.81:8080/repo/"
 
 # 마스터 서버 공통 네트워크 인터페이스 이름
-master_interface_name: ens18
+master_interface_name: wg0
 
 # 마스터 서버 VRRP 그룹 ID
 master_vrrp_id: 51
@@ -15,7 +15,7 @@ master_vrrp_id: 51
 master_auth_pass: cloud1234
 
 # 마스터 서버 가상 IP 주소
-master_virtual_ip: 192.168.135.80
+master_virtual_ip: 10.0.0.100
 
 # 마스터 서버 Notify 스크립트 경로
 master_notify_script: "/etc/keepalived/notify.sh"
@@ -30,7 +30,7 @@ master_chk_interval: 2
 master_chk_weight: 2
 #------------------------------------------------------------------------------------------------------------
 # 백업 서버 네트워크 인터페이스 이름
-backup_interface_name: ens18
+backup_interface_name: wg0
 
 # 백업 서버 VRRP 그룹 ID
 backup_vrrp_id: 51
@@ -39,7 +39,7 @@ backup_vrrp_id: 51
 backup_auth_pass: cloud1234
 
 # 백업 서버 가상 IP 주소
-backup_virtual_ip: 192.168.135.80
+backup_virtual_ip: 10.0.0.100
 
 # 백업 서버 Notify 스크립트 경로
 backup_notify_script: "/etc/keepalived/notify.sh"
